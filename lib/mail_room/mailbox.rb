@@ -18,7 +18,9 @@ module MailRoom
     :idle_timeout,
     :search_command,
     :name,
+    :stage,
     :delete_after_delivery,
+    :move_after_delivery,
     :expunge_deleted,
     :delivery_klass,
     :delivery_method, # :noop, :logger, :postback, :letter_opener
@@ -60,6 +62,7 @@ module MailRoom
       limit_max_unread: 0,
       idle_timeout: IMAP_IDLE_TIMEOUT,
       delete_after_delivery: false,
+      move_after_delivery: false,
       expunge_deleted: false,
       delivery_options: {},
       arbitration_method: 'noop',

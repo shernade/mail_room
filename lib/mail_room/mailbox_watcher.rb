@@ -29,7 +29,13 @@ module MailRoom
       @running = true
 
       connection.on_new_message do |message|
-        @mailbox.deliver(message)
+        delivered = @mailbox.deliver(message)
+        puts "delivered"
+        puts delivered
+
+        puts "@mailbox.move_after_delivery && delivered"
+        puts @mailbox.move_after_delivery && delivered
+        connection.move(message) if @mailbox.move_after_delivery && delivered
       end
 
       self.watching_thread = Thread.start do

@@ -53,6 +53,20 @@ module MailRoom
         setup
       end
 
+      def move(message)
+        puts "moving"
+        puts message.uid
+        if !imap.list('Appmanager/', mailbox.stage)
+          @mailbox.logger.info({ context: @mailbox.context, action: "Creating folder Appmanager/#{mailbox.stage}" })
+          imap.create("Appmanager/#{mailbox.stage}")
+        end
+        @mailbox.logger.info({ context: @mailbox.context, action: "Moving msg to folder Appmanager/#{mailbox.stage}" })
+        puts "jejejej"
+        a = imap.move(message.uid, "Appmanager/#{mailbox.stage}")
+        puts a
+        a
+      end
+
       private
 
       def reset
@@ -140,14 +154,14 @@ module MailRoom
                         zip(msgs).
                         # filter failed deliveries, collect message
                         select(&:first).map(&:last).
-                        # scrub delivered messages
-                        map { |message| scrub(message) }
+                        # after delivered messages
+                        map { |message| after_delivery(message) }
                             .any?
 
         imap.expunge if @mailbox.expunge_deleted && any_deletions
       end
 
-      def scrub(message)
+      def after_delivery(message)
         if @mailbox.delete_after_delivery
           imap.store(message.seqno, '+FLAGS', [Net::IMAP::DELETED])
           true

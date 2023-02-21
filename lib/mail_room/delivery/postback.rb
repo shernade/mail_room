@@ -80,7 +80,7 @@ module MailRoom
           )
         end
 
-        connection.post do |request|
+        response = connection.post do |request|
           request.url @delivery_options.url
           request.body = message
           config_request_content_type(request)
@@ -88,7 +88,10 @@ module MailRoom
         end
 
         @delivery_options.logger.info({ delivery_method: 'Postback', action: 'message pushed', url: @delivery_options.url })
-        true
+        a = response.success?
+        puts "success?"
+        puts a
+        a
       end
 
       private
